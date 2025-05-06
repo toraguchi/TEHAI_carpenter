@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo">TEHAI</h1>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">企業リスト</a></li>
+                    <li><a href="crm.html">案件依頼</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <form id="custom-form" enctype="multipart/form-data">
+                <label for="postalcode">郵便番号</label>
+                <input type="text" id="postalcode" placeholder="例: 123-4567" required>
+
+                <label for="address">住所</label>
+                <input type="text" id="address" placeholder="住所を入力してください" required>
+
+                <label for="datetime">希望日時</label>
+                <input type="datetime-local" id="datetime" required>
+
+                <label for="image1">画像1</label>
+                <input type="file" id="image1" accept="image/*" required>
+
+                <label for="image2">画像2</label>
+                <input type="file" id="image2" accept="image/*">
+
+                <label for="image3">画像3</label>
+                <input type="file" id="image3" accept="image/*">
+
+                <button type="button" id="submit-form">送信</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 TEHAI</p>
+    </footer>
+
+    <script>
+        // 郵便番号から住所を自動反映
+        document.getElementById("postalcode").addEventListener("blur", function () {
+            const postalCode = this.value.trim();
+            if (!postalCode) return;
+
+            fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${postalCode}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 200 && data.results) {
+                        const result = data.results[0];
+                        document.getElementById("address").value = `${result.address1} ${result.address2} ${result.address3}`;
+                    } else {
+                        alert("郵便番号に該当する住所が見つかりません");
+                        document.getElementById("address").value = "";
+                    }
+                })
+                .catch(error => {
+                    console.error("郵便番号検索エラー:", error);
+                    alert("住所の取得中にエラーが発生しました");
+                });
+        });
+
+        // フォーム送信処理
+        document.getElementById("submit-form").addEventListener("click", function () {
+            const formData = new FormData(document.getElementById("custom-form"));
+            const image1 = document.getElementById("image1").files[0];
+            const image2 = document.getElementById("image2").files[0];
+            const image3 = document.getElementById("image3").files[0];
+
+            if (!image1) {
+                alert("画像1は必須です。");
+                return;
+            }
+
+            formData.append("image1", image1);
+            if (image2) formData.append("image2", image2);
+            if (image3) formData.append("image3", image3);
+
+            // サーバーに送信（例: Google Apps Script またはバックエンドAPI）
+            fetch("https://script.google.com/a/macros/2019showtime.com/s/AKfycbzZMNIKMvWhETkLlpvyzTLZNtKEVxrD9JSaK4VnnKleZ66uQXKPTnfZtvXr9Lrcs_fp/exec", {
+                method: "POST",
+                body: formData,
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("フォームが送信されました！");
+                    } else {
+                        alert("送信に失敗しました。");
+                    }
+                })
+                .catch(error => {
+                    console.error("送信エラー:", error);
+                    alert("送信中にエラーが発生しました。");
+                });
+        });
+    </script>
+</body>
+</html>

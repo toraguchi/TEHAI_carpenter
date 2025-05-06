@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>TEHAI - 企業マッチング</title>
+   <link rel="stylesheet" href="styles.css">
+   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+   <!-- ヘッダー -->
+   <header>
+       <div class="container">
+           <h1 class="logo">TEHAI</h1>
+           <nav>
+               <ul class="nav-links">
+                   <li><a href="#companies">企業リスト</a></li>
+                   <li><a href="form.html">案件依頼</a></li>           
+               </ul>
+           </nav>
+       </div>
+   </header>
+   <!-- ヒーローセクション -->
+   <section class="hero">
+       <div class="container">
+           <h2>最適な処理施設【TEHAI】</h2>
+           <p>TEHAIは、処理業務をサポートするための企業マッチングサービスです。</p>
+       </div>
+   </section>
+
+   <!-- 特徴セクション -->
+   <section id="features">
+       <div class="container">
+           <h3>サービス使用方法</h3>
+           <div class="features-grid">
+               <div class="feature-item">
+                   <h4>ステップ①</h4>
+                   <p>現在地の取得の許可</p>
+               </div>
+               <div class="feature-item">
+                   <h4>ステップ②</h4>
+                   <p>持ち込む企業を選定</p>
+               </div>
+               <div class="feature-item">
+                   <h4>ステップ③</h4>
+                   <p>tel依頼で電話申し込み
+                    ※TEHAIサービスをお伝えしご担当者宛にご連絡いただくとスムーズです</p>
+               </div>
+           </div>
+       </div>
+   </section>
+
+
+
+<!-- 企業リスト -->
+<section id="companies">
+    <div class="container">
+        <h3>企業一覧</h3>
+        <div id="company-list">
+            <!-- JavaScriptでここに企業情報を挿入 -->
+        </div>
+    </div>
+</section>
+
+
+  
+   <!-- フッター -->
+   <footer>
+       <div class="container">
+           <p>&copy; 2025 TEHAI. All Rights Reserved.</p>
+       </div>
+   </footer>
+
+   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0hj5yFG-9OZwWcL6o0RYYieGIlax0RMw&libraries=places"></script>
+   <script src="script.js"></script>
+   
+</body>
+</html>
