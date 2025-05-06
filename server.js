@@ -40,54 +40,27 @@ app.post("/send-email", upload.fields([
 
         console.log("添付ファイル:", attachments);
 
-        // メール送信処理...
-        res.status(200).send("メールが送信されました");
-    } catch (error) {
-        console.error("メール送信エラー:", error);
-        res.status(500).send("メール送信中にエラーが発生しました");
-    }
-    try {
-        // フォームデータを取得
-        const { company, postalcode, address, datetime } = req.body;
-
-        // メール本文の作成
-        const emailBody = `
-【依頼フォーム内容】
-■ 企業名: ${company || "未入力"}
-■ 郵便番号: ${postalcode || "未入力"}
-■ 住所: ${address || "未入力"}
-■ 希望日時: ${datetime || "未入力"}
-
-ご対応可否／お見積もり金額を
-1週間前までに、ご返信よろしくお願いいたします。
-        `.trim();
-
-        // 添付ファイルの処理
-        const attachments = [];
-        if (req.files) {
-            req.files.forEach((file) => {
-                attachments.push({
-                    filename: file.originalname,
-                    path: file.path,
-                });
-            });
-        }
-
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: "info@2019showtime.com",
-                pass: "sjrhfdxlxshsyizi",
+            user: "info@2019showtime.com",
+            pass: "sjrhfdxlxshsyizi",
             },
-        });
+            });
 
         // メールオプションの設定
         const mailOptions = {
-            from: process.env.GMAIL_USER, // 送信元
-            to: "show2019.11.12@gmail.com", // 送信先
-            subject: "【依頼フォーム】新しい依頼が届きました", // 件名
-            text: emailBody, // 本文
-            attachments, // 添付ファイル
+            from: process.env.GMAIL_USER,
+            to: "show2019.11.12@gmail.com",
+            subject: "【依頼フォーム】新しい依頼が届きました",
+            text: `
+【依頼フォーム内容】
+■ 企業名: ${req.body.company || "未入力"}
+■ 郵便番号: ${req.body.postalcode || "未入力"}
+■ 住所: ${req.body.address || "未入力"}
+■ 希望日時: ${req.body.datetime || "未入力"}
+            `.trim(),
+            attachments,
         };
 
         // メール送信
@@ -95,8 +68,10 @@ app.post("/send-email", upload.fields([
 
         // アップロードされたファイルを削除
         if (req.files) {
-            req.files.forEach((file) => {
-                fs.unlinkSync(file.path);
+            Object.keys(req.files).forEach((key) => {
+                req.files[key].forEach((file) => {
+                    fs.unlinkSync(file.path);
+                });
             });
         }
 
