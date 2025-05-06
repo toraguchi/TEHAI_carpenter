@@ -52,55 +52,48 @@
     </footer>
 
     <script>
-        // 郵便番号から住所を自動反映
-        document.getElementById("postalcode").addEventListener("blur", function () {
-            const postalCode = this.value.trim();
-            if (!postalCode) return;
+    // 郵便番号から住所を自動反映
+    document.getElementById("postalcode").addEventListener("blur", function () {
+        const postalCode = this.value.trim();
+        if (!postalCode) return;
 
-            fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${postalCode}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 200 && data.results) {
-                        const result = data.results[0];
-                        document.getElementById("address").value = `${result.address1} ${result.address2} ${result.address3}`;
-                    } else {
-                        alert("郵便番号に該当する住所が見つかりません");
-                        document.getElementById("address").value = "";
-                    }
-                })
-                .catch(error => {
-                    console.error("郵便番号検索エラー:", error);
-                    alert("住所の取得中にエラーが発生しました");
-                });
-        });
-
-        // フォーム送信処理
-        document.getElementById("submit-form").addEventListener("click", function () {
-    const fileInput = document.getElementById("image1");
-    if (!fileInput.files.length) {
-        alert("画像1を選択してください");
-        return;
-    }
-
-    const formElement = document.getElementById("custom-form");
-    const formData = new FormData(formElement);
-
-    fetch("https://script.google.com/macros/s/AKfycbynJTCRWLcxaGzR8Tac2qjFPPH8JnsI-e5NcRmHmCD0AifiR830WMx4sR0dMDVyzpRG/exec", {
-        method: "POST",
-        body: formData
-    })
-    .then(response => {
-        if (response.ok) {
-            alert("フォームが送信されました！");
-        } else {
-            alert("送信に失敗しました。");
-        }
-    })
-    .catch(error => {
-        console.error("送信エラー:", error);
-        alert("送信中にエラーが発生しました。");
+        fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${postalCode}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 200 && data.results) {
+                    const result = data.results[0];
+                    document.getElementById("address").value = `${result.address1} ${result.address2} ${result.address3}`;
+                } else {
+                    alert("郵便番号に該当する住所が見つかりません");
+                    document.getElementById("address").value = "";
+                }
+            })
+            .catch(error => {
+                console.error("郵便番号検索エラー:", error);
+                alert("住所の取得中にエラーが発生しました");
+            });
     });
-});
+
+    document.getElementById("submit-form").addEventListener("click", async function () {
+        const formElement = document.getElementById("custom-form");
+        const formData = new FormData(formElement);
+
+        try {
+            const response = await fetch("http://localhost:3000/send-email", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (response.ok) {
+                alert("フォームが送信されました！");
+            } else {
+                alert("送信に失敗しました。");
+            }
+        } catch (error) {
+            console.error("送信エラー:", error);
+            alert("送信中にエラーが発生しました。");
+        }
+    });
     </script>
 </body>
 </html>
