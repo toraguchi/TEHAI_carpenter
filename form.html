@@ -76,10 +76,15 @@
 
         // フォーム送信処理
         document.getElementById("submit-form").addEventListener("click", function () {
-    const formElement = document.getElementById("custom-form");
-    const formData = new FormData(formElement);
+    const fileInput = document.getElementById("image1");
+    if (!fileInput.files.length) {
+        alert("画像1を選択してください");
+        return;
+    }            const formElement = document.getElementById("custom-form");
+            const formData = new FormData(formElement);
 
     // サーバーに送信
+    
     fetch("https://script.google.com/macros/s/AKfycbzWLhCOMjgwXq0vbyAKawHgpYnlnx5OdB7SGG5DqQcTny2LUbpj6vgWv3xOqbq45fOM/exec", {
         method: "POST",
         body: formData, // FormData を送信
