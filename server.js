@@ -44,12 +44,11 @@ app.post("/send-email", upload.array("images", 3), async (req, res) => {
             });
         }
 
-        // Nodemailer の設定
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: process.env.GMAIL_USER, // 環境変数から Gmail ユーザーを取得
-                pass: process.env.GMAIL_PASS, // 環境変数から Gmail パスワードを取得
+                user: "info@2019showtime.com",
+                pass: "sjrhfdxlxshsyizi",
             },
         });
 
