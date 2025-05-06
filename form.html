@@ -80,29 +80,26 @@
     if (!fileInput.files.length) {
         alert("画像1を選択してください");
         return;
-    }            const formElement = document.getElementById("custom-form");
-            const formData = new FormData(formElement);
+    }
 
-    // サーバーに送信
-    
+    const formElement = document.getElementById("custom-form");
+    const formData = new FormData(formElement);
+
     fetch("https://script.google.com/macros/s/AKfycbzWLhCOMjgwXq0vbyAKawHgpYnlnx5OdB7SGG5DqQcTny2LUbpj6vgWv3xOqbq45fOM/exec", {
         method: "POST",
-        body: formData, // FormData を送信
+        body: formData
     })
-        .then(response => {
-            if (response.ok) {
-                alert("フォームが送信されました！");
-            } else {
-                return response.text().then(text => {
-                    console.error("サーバーエラー:", text);
-                    alert("送信に失敗しました。サーバーエラーが発生しました。");
-                });
-            }
-        })
-        .catch(error => {
-            console.error("送信エラー:", error);
-            alert("送信中にエラーが発生しました。詳細はコンソールを確認してください。");
-        });
+    .then(response => {
+        if (response.ok) {
+            alert("フォームが送信されました！");
+        } else {
+            alert("送信に失敗しました。");
+        }
+    })
+    .catch(error => {
+        console.error("送信エラー:", error);
+        alert("送信中にエラーが発生しました。");
+    });
 });
     </script>
 </body>
