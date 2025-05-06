@@ -73,37 +73,29 @@
 
         // フォーム送信処理
         document.getElementById("submit-form").addEventListener("click", function () {
-            const formData = new FormData(document.getElementById("custom-form"));
-            const image1 = document.getElementById("image1").files[0];
-            const image2 = document.getElementById("image2").files[0];
-            const image3 = document.getElementById("image3").files[0];
+    const formElement = document.getElementById("custom-form");
+    const formData = new FormData(formElement);
 
-            if (!image1) {
-                alert("画像1は必須です。");
-                return;
-            }
-
-            formData.append("image1", image1);
-            if (image2) formData.append("image2", image2);
-            if (image3) formData.append("image3", image3);
-
-            // サーバーに送信（例: Google Apps Script またはバックエンドAPI）
-            fetch("https://script.google.com/a/macros/2019showtime.com/s/AKfycbzZMNIKMvWhETkLlpvyzTLZNtKEVxrD9JSaK4VnnKleZ66uQXKPTnfZtvXr9Lrcs_fp/exec", {
-                method: "POST",
-                body: formData,
-            })
-                .then(response => {
-                    if (response.ok) {
-                        alert("フォームが送信されました！");
-                    } else {
-                        alert("送信に失敗しました。");
-                    }
-                })
-                .catch(error => {
-                    console.error("送信エラー:", error);
-                    alert("送信中にエラーが発生しました。");
+    // サーバーに送信
+    fetch("https://script.google.com/macros/s/AKfycbxg3l3QfKkgjlLK-eJQ7RvBoMe6xfvWapJqkGC_YnN2zkq5msvRCevpuo2Fs6E11M5P/exec", {
+        method: "POST",
+        body: formData, // FormData を送信
+    })
+        .then(response => {
+            if (response.ok) {
+                alert("フォームが送信されました！");
+            } else {
+                return response.text().then(text => {
+                    console.error("サーバーエラー:", text);
+                    alert("送信に失敗しました。サーバーエラーが発生しました。");
                 });
+            }
+        })
+        .catch(error => {
+            console.error("送信エラー:", error);
+            alert("送信中にエラーが発生しました。詳細はコンソールを確認してください。");
         });
+});
     </script>
 </body>
 </html>
