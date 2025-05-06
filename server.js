@@ -16,7 +16,36 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // メール送信エンドポイント
-app.post("/send-email", upload.array("image1","image2","image3"), async (req, res) => {
+app.post("/send-email", upload.fields([
+    { name: "image1", maxCount: 1 },
+    { name: "image2", maxCount: 1 },
+    { name: "image3", maxCount: 1 },
+]), async (req, res) => {
+    try {
+        console.log("リクエストボディ:", req.body);
+        console.log("アップロードファイル:", req.files);
+
+        // 添付ファイルの処理
+        const attachments = [];
+        if (req.files) {
+            Object.keys(req.files).forEach((key) => {
+                req.files[key].forEach((file) => {
+                    attachments.push({
+                        filename: file.originalname,
+                        path: file.path,
+                    });
+                });
+            });
+        }
+
+        console.log("添付ファイル:", attachments);
+
+        // メール送信処理...
+        res.status(200).send("メールが送信されました");
+    } catch (error) {
+        console.error("メール送信エラー:", error);
+        res.status(500).send("メール送信中にエラーが発生しました");
+    }
     try {
         // フォームデータを取得
         const { company, postalcode, address, datetime } = req.body;
