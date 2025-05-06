@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // メール送信エンドポイント
-app.post("/send-email", upload.array("images", 3), async (req, res) => {
+app.post("/send-email", upload.array("image1","image2","image3"), async (req, res) => {
     try {
         // フォームデータを取得
         const { company, postalcode, address, datetime } = req.body;
