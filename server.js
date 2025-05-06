@@ -21,11 +21,6 @@ app.post("/send-email", upload.single("image1"), async (req, res) => {
         // フォームデータを取得
         const { company, postalcode, address, datetime } = req.body;
 
-        // 必須フィールドのチェック
-        if (!company || !postalcode || !address || !datetime) {
-            return res.status(400).send("必要なデータが不足しています");
-        }
-
         // メール本文の作成
         const emailBody = `
 【依頼フォーム内容】
@@ -47,12 +42,11 @@ app.post("/send-email", upload.single("image1"), async (req, res) => {
             });
         }
 
-        // Nodemailer の設定
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: process.env.GMAIL_USER, // 環境変数から Gmail ユーザーを取得
-                pass: process.env.GMAIL_PASS, // 環境変数から Gmail パスワードを取得
+                user: "info@2019showtime.com",
+                pass: "sjrhfdxlxshsyizi",
             },
         });
 
