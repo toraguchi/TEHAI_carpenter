@@ -20,27 +20,27 @@
 
     <main>
         <div class="container">
-            <form id="custom-form" enctype="multipart/form-data">
-                <label for="postalcode">郵便番号</label>
-                <input type="text" id="postalcode" placeholder="例: 123-4567" required>
-
-                <label for="address">住所</label>
-                <input type="text" id="address" placeholder="住所を入力してください" required>
-
-                <label for="datetime">希望日時</label>
-                <input type="datetime-local" id="datetime" required>
-
-                <label for="image1">画像1</label>
-                <input type="file" id="image1" accept="image/*" required>
-
-                <label for="image2">画像2</label>
-                <input type="file" id="image2" accept="image/*">
-
-                <label for="image3">画像3</label>
-                <input type="file" id="image3" accept="image/*">
-
+            <form id="custom-form">
+                <label for="postalcode">郵便番号:</label>
+                <input type="text" id="postalcode" name="postalcode" required>
+              
+                <label for="address">住所:</label>
+                <input type="text" id="address" name="address" required>
+              
+                <label for="datetime">希望日時:</label>
+                <input type="datetime-local" id="datetime" name="datetime" required>
+              
+                <label for="image1">画像1:</label>
+                <input type="file" id="image1" name="image1">
+              
+                <label for="image2">画像2:</label>
+                <input type="file" id="image2" name="image2">
+              
+                <label for="image3">画像3:</label>
+                <input type="file" id="image3" name="image3">
+              
                 <button type="button" id="submit-form">送信</button>
-            </form>
+              </form>
         </div>
     </main>
 
