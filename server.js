@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // メール送信エンドポイント
-app.post("/send-email", upload.single("image1"), async (req, res) => {
+app.post("/send-email", upload.array("images", 3), async (req, res) => {
     try {
         // フォームデータを取得
         const { company, postalcode, address, datetime } = req.body;
@@ -24,10 +24,10 @@ app.post("/send-email", upload.single("image1"), async (req, res) => {
         // メール本文の作成
         const emailBody = `
 【依頼フォーム内容】
-■ 企業名: ${company}
-■ 郵便番号: ${postalcode}
-■ 住所: ${address}
-■ 希望日時: ${datetime}
+■ 企業名: ${company || "未入力"}
+■ 郵便番号: ${postalcode || "未入力"}
+■ 住所: ${address || "未入力"}
+■ 希望日時: ${datetime || "未入力"}
 
 ご対応可否／お見積もり金額を
 1週間前までに、ご返信よろしくお願いいたします。
@@ -35,18 +35,21 @@ app.post("/send-email", upload.single("image1"), async (req, res) => {
 
         // 添付ファイルの処理
         const attachments = [];
-        if (req.file) {
-            attachments.push({
-                filename: req.file.originalname,
-                path: req.file.path,
+        if (req.files) {
+            req.files.forEach((file) => {
+                attachments.push({
+                    filename: file.originalname,
+                    path: file.path,
+                });
             });
         }
 
+        // Nodemailer の設定
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: "info@2019showtime.com",
-                pass: "sjrhfdxlxshsyizi",
+                user: process.env.GMAIL_USER, // 環境変数から Gmail ユーザーを取得
+                pass: process.env.GMAIL_PASS, // 環境変数から Gmail パスワードを取得
             },
         });
 
@@ -63,8 +66,10 @@ app.post("/send-email", upload.single("image1"), async (req, res) => {
         await transporter.sendMail(mailOptions);
 
         // アップロードされたファイルを削除
-        if (req.file) {
-            fs.unlinkSync(req.file.path);
+        if (req.files) {
+            req.files.forEach((file) => {
+                fs.unlinkSync(file.path);
+            });
         }
 
         res.status(200).send("メールが送信されました");
