@@ -79,7 +79,7 @@
         const formData = new FormData(formElement);
 
         try {
-            const response = await fetch("http://localhost:3000/send-email", {
+            const response = await fetch("https://tehai-carpenter.onrender.com/send-email", {
                 method: "POST",
                 body: formData,
             });

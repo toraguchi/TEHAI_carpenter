@@ -81,9 +81,7 @@ app.post("/send-email", upload.fields([
         res.status(500).send("メール送信中にエラーが発生しました");
     }
 });
-
-// サーバー起動
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`サーバーがポート ${PORT} で起動しました`);
-});
+const cors = require("cors");
+app.use(cors({
+    origin: "https://your-frontend.netlify.app", // Netlify の公開 URL
+}));
