@@ -1,18 +1,23 @@
 {
-  "name": "tehai_carpenter",
-  "version": "1.0.0",
-  "main": "Script.js",
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "lint": "eslint .",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "engines": {
+    "node": "20"
+  },
+  "main": "index.js",
   "dependencies": {
     "express": "^5.1.0",
+    "firebase-functions": "^6.3.2",
     "multer": "^1.4.5-lts.2",
     "nodemailer": "^7.0.2"
-  }
+  },
+  "private": true
 }
