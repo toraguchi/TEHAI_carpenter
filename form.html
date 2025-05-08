@@ -20,7 +20,8 @@
 
     <main>
         <div class="container">
-            <form id="custom-form" enctype="multipart/form-data" method="post" action="https://sendemailtemporary-rjmvg7kfjq-uc.a.run.app">                        <label for="company">企業名:</label>
+            <form id="custom-form" enctype="multipart/form-data" method="post" action="https://sendemailtemporary-rjmvg7kfjq-uc.a.run.app">
+                 <label for="company">企業名:</label>
                 <input type="text" id="company" name="company" value="Show Time" required>
             
                 <label for="postalcode">郵便番号:</label>
@@ -78,7 +79,7 @@
         const formData = new FormData(formElement);
 
         try {
-            const response = await fetch("https://tehai-carpenter.onrender.com/send-email", {
+            const response = await fetch("https://sendemailtemporary-rjmvg7kfjq-uc.a.run.app", {
                 method: "POST",
                 body: formData,
             });

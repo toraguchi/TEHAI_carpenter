@@ -1,9 +1,9 @@
 const functions = require("firebase-functions");
 const multer = require("multer");
 const nodemailer = require("nodemailer");
-const cors = require("cors")({ origin: true }); // Initialize cors *correctly*
+const cors = require("cors")({ origin: true }); // 正しい CORS 初期化
 
-// Multer setup for handling file uploads to memory
+// Multer の設定：メモリにファイルを保存
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage }).fields([
     { name: "image1", maxCount: 1 },
@@ -12,45 +12,44 @@ const upload = multer({ storage: storage }).fields([
 ]);
 
 /**
- * Firebase Function to handle sending emails with attachments.
- * Responds to HTTP requests and processes form data including file uploads.
+ * メール送信を処理する Firebase Function。
+ * HTTP リクエストに応答し、ファイルアップロードを含むフォームデータを処理します。
  */
 exports.sendEmailTemporary = functions.https.onRequest(async (req, res) => {
-    // Wrap the entire function logic, *including* upload, in the cors handler
-    cors(req, res, async () => { 
+    // CORS ヘッダーを送信するためのミドルウェアを *最初に* 使用
+    cors(req, res, async () => {
         try {
-            // Wrap the entire file upload and email sending logic in a promise
+            // ファイルアップロード処理を Promise でラップ
             await new Promise((resolve, reject) => {
                 upload(req, res, (err) => {
                     if (err) {
-                        console.error("Multer error:", err);
-                        return reject(res.status(500).send("File upload error"));
+                        console.error("Multer エラー:", err);
+                        return reject(res.status(500).send("ファイルアップロードエラー"));
                     } else {
                         resolve();
                     }
                 });
             });
 
-            console.log("Request body:", req.body);
-            console.log("Uploaded files:", req.files);
+            console.log("リクエストボディ:", req.body);
+            console.log("アップロードされたファイル:", req.files);
 
             const attachments = [];
             if (req.files) {
                 for (const key in req.files) {
                     if (req.files.hasOwnProperty(key)) {
-                        for (const file of req.files[key]) {
-                            attachments.push({
-                                filename: file.originalname,
-                                content: file.buffer,
-                            });
-                        }
+                        const file = req.files[key][0];
+                        attachments.push({
+                            filename: file.originalname,
+                            content: file.buffer,
+                        });
                     }
                 }
             }
 
-            console.log("Attachments:", attachments);
+            console.log("添付ファイル:", attachments);
 
-            // Nodemailer transporter setup
+            // Nodemailer トランスポーターの設定
             const transporter = nodemailer.createTransport({
                 service: "gmail",
                 auth: {
@@ -59,10 +58,10 @@ exports.sendEmailTemporary = functions.https.onRequest(async (req, res) => {
                 },
             });
 
-            // Mail options setup
+            // メールオプションの設定
             const mailOptions = {
                 from: functions.config().gmail.user,
-                to: "show2019.11.12@gmail.com", // Replace with your email
+                to: "show2019.11.12@gmail.com", // あなたのメールアドレスに置き換えてください
                 subject: "【依頼フォーム】新しい依頼が届きました",
                 text: `
           【依頼フォーム内容】
@@ -74,15 +73,15 @@ exports.sendEmailTemporary = functions.https.onRequest(async (req, res) => {
                 attachments,
             };
 
-            // Send the email
+            // メールを送信
             await transporter.sendMail(mailOptions);
 
-            res.status(200).send("Email sent successfully");
+            res.status(200).send("メールを送信しました");
         } catch (error) {
-            console.error("Error sending email:", error);
-            // Ensure that you are sending an error response in all cases
+            console.error("メール送信エラー:", error);
+             // エラー応答が常に送信されるようにする
             if (!res.headersSent) {
-                res.status(500).send(`Email sending error: ${error.message}`);
+                res.status(500).send(`メール送信エラー: ${error.message}`);
             }
         }
     });
